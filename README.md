@@ -6,6 +6,7 @@ A **CSOPESY Semi-Major Output** that shows an OS emulator, requiring a command i
 - Lim, Nathan
 - Magabo, Julianna
 - Manlapig, Rachel
+- Sanchez, Jeck
 
 ## Requirements
 
