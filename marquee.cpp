@@ -18,10 +18,6 @@ mutex COMMANDS_MUTEX; // might remove
 mutex INPUT_MUTEX; // might remove
 string CURRENT_INPUT = ""; // might remove
 
-/* Constants for polling and screen refresh */
-//const int screen_refresh_delay = 50;  // higher value, the slower its refresh; test 10 vs. 80
-//const int keyboard_poll_delay = 15;  // 5, 10, 15; test 5 vs. 50
-
 /* Marquee Positions */
 int marquee_x = 1, marquee_y = 5;
 int dx = 1, dy = 1;
@@ -76,7 +72,7 @@ void SetMarqueeSpeed(int speed) {
 void MarqueeConsole() {
     system("cls");
 
-    // Header
+    // Header MIGHT MODIFY LATER IF NEEDED
     SetCursorPosition(0, 0);
     cout << "*********************************" << endl;
     cout << "*     Displaying a marquee !    *" << endl;

@@ -29,10 +29,8 @@ Provide here a description of the project implementation (technical stuff? how t
 
 ### Implementation: Notes
 
-- I think `set_text`, `set_speed`, `stop_marquee` commands are only accessible or can be invoked when you start the marquee. Therefore, it should be an unrecognizable command in the main menu and only the `help`, `start_marquee`, and `exit` commands will be recognizable.
+- Input validation: if `set_text` and `set_speed` haven't been invoked, then start_marquee shouldn't be accessible
 - Not sure if the `help` command should be accessible also upon invoking the `start_marquee` command. However, current implementation does not support this.
-- Not sure but upon invoking the `
-- How exactly should stop_marquee work? Mawawala lang ba yung dvd-like animation or is that the equivalent to the exit command sa main menu idkkkk
 - In-line documentation could be improved skdjfhss
 - Modify the functions to follow the specs: 
 > 1. MarqueeConsole()
