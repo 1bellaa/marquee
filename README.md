@@ -32,12 +32,6 @@ Provide here a description of the project implementation (technical stuff? how t
 - Input validation: if `set_text` and `set_speed` haven't been invoked, then start_marquee shouldn't be accessible
 - Not sure if the `help` command should be accessible also upon invoking the `start_marquee` command. However, current implementation does not support this.
 - In-line documentation could be improved skdjfhss
-- Modify the functions to follow the specs: 
-> 1. MarqueeConsole()
-> 2. ProcessMarqueeCommand()
-> 3. MarqueeInputThread()
-> 4. StartMarquee
-> 5. Optional ??? change the show,hide,setcursor functions + constants 
 
 ## How to run (to be updated next time!!)
 
