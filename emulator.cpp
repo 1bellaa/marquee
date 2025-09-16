@@ -7,6 +7,7 @@
 using namespace std;
 extern void StartMarqueeConsole();
 extern void SetMarqueeText(const string& text);
+extern void SetMarqueeSpeed(int speed);
 
 void Welcome() {
     cout << " ____  ____  _____  _____  ____  ____  __  __" << endl;
@@ -53,6 +54,9 @@ int main() {
         else if (command.rfind("set_text", 0) == 0) {
             SetMarqueeText(command.substr(9)); 
         } 
+        else if (command.rfind("set_speed", 0) == 0) {
+            SetMarqueeSpeed(stoi(command.substr(10)));
+        }
         else if (command == "exit") {
             running = false;
         }

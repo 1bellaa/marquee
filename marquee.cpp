@@ -10,32 +10,33 @@
 
 using namespace std;
 
-/* Marquee Constants */
-/*
-SOME OF THESE CAN BE OMITTED???
-*/
+/* Marquee Global Variables */
 atomic<bool> RUNNING_MARQUEE(false);
 atomic<bool> EXIT_MARQUEE(false);
-vector<string> RECENT_COMMANDS;
-mutex COMMANDS_MUTEX;
-mutex INPUT_MUTEX;
-string CURRENT_INPUT = "";
+vector<string> RECENT_COMMANDS; // might remove
+mutex COMMANDS_MUTEX; // might remove
+mutex INPUT_MUTEX; // might remove
+string CURRENT_INPUT = ""; // might remove
 
 /* Constants for polling and screen refresh */
-/*
-ACCORDING TO THE SPECS, THESE VALUES ARE DETERMINED BY THE USER
-BUT FOR NOW, I\'LL JUST SET IT TO A DEFAULT VALUE
-*/
-const int screen_refresh_delay = 50;  // higher value, the slower its refresh; test 10 vs. 80
-const int keyboard_poll_delay = 15;  // 5, 10, 15; test 5 vs. 50
+//const int screen_refresh_delay = 50;  // higher value, the slower its refresh; test 10 vs. 80
+//const int keyboard_poll_delay = 15;  // 5, 10, 15; test 5 vs. 50
 
-/* Functions for Marquee */
+/* Marquee Positions */
 int marquee_x = 1, marquee_y = 5;
 int dx = 1, dy = 1;
+
+/* Marquee Layout */
 const int CONSOLE_WIDTH = 120; // change
 const int CONSOLE_HEIGHT = 50; // change
+
+/* Marquee Text */
 string MARQUEE_TEXT = "Hello world in marquee!";
 mutex MARQUEE_TEXT_MUTEX;
+
+/* Marquee Speed */
+int SPEED = 50; 
+mutex SPEED_MUTEX;
 
 void SetCursorPosition(int x, int y) {
     COORD coord;
@@ -65,13 +66,20 @@ void SetMarqueeText(const string& text) {
     }
 }
 
+void SetMarqueeSpeed(int speed) {
+    lock_guard<mutex> lock(SPEED_MUTEX);
+    if (speed > 0) {
+        SPEED = speed;
+    }
+}
+
 void MarqueeConsole() {
     system("cls");
 
     // Header
     SetCursorPosition(0, 0);
     cout << "*********************************" << endl;
-    cout << "* Displaying a marquee console! *" << endl;
+    cout << "*     Displaying a marquee !    *" << endl;
     cout << "*********************************" << endl;
 
     // Marquee position
@@ -100,13 +108,16 @@ void MarqueeConsole() {
 
     // Draw input prompt
     SetCursorPosition(0, 17);
-    cout << "Enter a command for marquee console: ";
+    cout << "Command: ";
 
     {
         lock_guard<mutex> lock(INPUT_MUTEX);
         cout << CURRENT_INPUT;
     }
 
+    /*
+        MIGHT REMOVE THIS LATER IF NOT NEEDED
+    */
     // Draw command history
     {
         lock_guard<mutex> lock(COMMANDS_MUTEX);
@@ -127,7 +138,14 @@ void MarqueeWorkerThread() {
         if (!EXIT_MARQUEE) {
             MarqueeConsole();
         }
-        this_thread::sleep_for(chrono::milliseconds(screen_refresh_delay)); // flicker speed
+
+        int refresh_speed;
+        {
+            lock_guard<mutex> lock(SPEED_MUTEX);
+            refresh_speed = SPEED;
+        }
+        
+        this_thread::sleep_for(chrono::milliseconds(refresh_speed)); // flicker speed
     }
 }
 
@@ -182,7 +200,14 @@ void MarqueeInputThread() {
                 }
             }
         }
-        this_thread::sleep_for(chrono::milliseconds(keyboard_poll_delay));
+
+        int refresh_speed;
+        {
+            lock_guard<mutex> lock(SPEED_MUTEX);
+            refresh_speed = SPEED;
+        }
+
+        this_thread::sleep_for(chrono::milliseconds(refresh_speed));
     }
 }
 
@@ -211,7 +236,12 @@ void StartMarqueeConsole() {
     thread input_thread(MarqueeInputThread);
 
     while (RUNNING_MARQUEE && !EXIT_MARQUEE) {
-        this_thread::sleep_for(chrono::milliseconds(100));
+        int refresh_speed;
+        {
+            lock_guard<mutex> lock(SPEED_MUTEX);
+            refresh_speed = SPEED;
+        }
+        this_thread::sleep_for(chrono::milliseconds(refresh_speed));
     }
 
     RUNNING_MARQUEE = false;
