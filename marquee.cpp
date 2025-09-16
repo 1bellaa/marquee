@@ -32,9 +32,10 @@ const int keyboard_poll_delay = 15;  // 5, 10, 15; test 5 vs. 50
 /* Functions for Marquee */
 int marquee_x = 1, marquee_y = 5;
 int dx = 1, dy = 1;
-const int CONSOLE_WIDTH = 120;
-const int CONSOLE_HEIGHT = 50;
-const string MARQUEE_TEXT = "Hello world in marquee!";
+const int CONSOLE_WIDTH = 120; // change
+const int CONSOLE_HEIGHT = 50; // change
+string MARQUEE_TEXT = "Hello world in marquee!";
+mutex MARQUEE_TEXT_MUTEX;
 
 void SetCursorPosition(int x, int y) {
     COORD coord;
@@ -57,23 +58,36 @@ void ShowCursor() {
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 }
 
+void SetMarqueeText(const string& text) {
+    lock_guard<mutex> lock(MARQUEE_TEXT_MUTEX);
+    if (!text.empty()) {
+        MARQUEE_TEXT = text;
+    }
+}
+
 void MarqueeConsole() {
     system("cls");
 
     // Header
     SetCursorPosition(0, 0);
-    cout << "****************************" << endl;
+    cout << "*********************************" << endl;
     cout << "* Displaying a marquee console! *" << endl;
-    cout << "****************************" << endl;
+    cout << "*********************************" << endl;
 
     // Marquee position
     marquee_x += dx;
     marquee_y += dy;
 
+    string marquee_text_animation;
+    {
+        lock_guard<mutex> lock(MARQUEE_TEXT_MUTEX);
+        marquee_text_animation = MARQUEE_TEXT;
+    }
+
     // Bounce like dvd
-    if (marquee_x <= 0 || marquee_x + MARQUEE_TEXT.length() >= CONSOLE_WIDTH - 1) {
+    if (marquee_x <= 0 || marquee_x + marquee_text_animation.length() >= CONSOLE_WIDTH - 1) {
         dx = -dx;
-        marquee_x = max(1, min(marquee_x, CONSOLE_WIDTH - (int)MARQUEE_TEXT.length() - 1));
+        marquee_x = max(1, min(marquee_x, CONSOLE_WIDTH - (int)marquee_text_animation.length() - 1));
     }
     if (marquee_y <= 3 || marquee_y >= 15) {
         dy = -dy;
@@ -82,7 +96,7 @@ void MarqueeConsole() {
 
     // Draw marquee text at current position
     SetCursorPosition(marquee_x, marquee_y);
-    cout << MARQUEE_TEXT;
+    cout << marquee_text_animation;
 
     // Draw input prompt
     SetCursorPosition(0, 17);
@@ -123,7 +137,7 @@ void ProcessMarqueeCommand(const string& command) {
             lock_guard<mutex> lock(COMMANDS_MUTEX);
             RECENT_COMMANDS.clear();
         }
-    } else if (command == "exit") {
+    } else if (command == "stop_marquee") {
         EXIT_MARQUEE = true;
         RUNNING_MARQUEE = false;
     } else if (!command.empty()) {
@@ -204,6 +218,7 @@ void StartMarqueeConsole() {
     if (animation_thread.joinable()) {
         animation_thread.join();
     }
+
     if (input_thread.joinable()) {
         input_thread.join();
     }

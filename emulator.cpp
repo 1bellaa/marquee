@@ -6,15 +6,19 @@
 
 using namespace std;
 extern void StartMarqueeConsole();
+extern void SetMarqueeText(const string& text);
 
 void Welcome() {
-    /*
-    DON\'T FORGET TO UPDATE THIS WITH THE CSOPESY THINGY
-    */
-    cout << "Welcome to CSOPESY!" << endl;
-    cout << "Group developer:" << endl;
-    cout << "Names" << endl;
-    cout << "Version date: Sept. 14" << endl;
+    cout << " ____  ____  _____  _____  ____  ____  __  __" << endl;
+    cout << "| ...|/ ...|| ... || ... || ...|/ ...||  ||  |" << endl;
+    cout << "| |   | |__ | | | || |.| || |.. | |__ |  \\/  |" << endl;
+    cout << "| |   \\._  || | | ||  __/ | ...| \\._ | \\.  ./" << endl;
+    cout << "| |__. __| || |.| || |    | |... __| |  |  |" << endl;
+    cout << "|____||____||_____||_|    |____||____|  |__|" << endl;
+    //cout << "Welcome to CSOPESY!" << endl;
+    cout << "\nGroup developer:" << endl;
+    cout << "Lim, Nathan\nMagabo, Julianna\nManlapig, Rachel\nSanchez, Jeck" << endl;
+    cout << "\nVersion date: Sept. 16" << endl;
     cout << "" << endl; 
 }
 
@@ -34,22 +38,20 @@ void HelpCommand() {
 int main() {
     Welcome();
     bool running = true;
+    
     while (running) {
         string command;
         cout << "Command> ";
         getline(cin, command);
+        
         if (command == "help") {
             HelpCommand();
         } 
         else if (command == "start_marquee") {
             StartMarqueeConsole();
         } 
-        else if (command == "stop_marquee") {
-            /*
-            MAYBE IMPLEMENT ANOTHER FUNCTION TO STOP THE MARQUEE
-            IN MARQUEE.CPP 
-            */
-            cout << "Stopping marquee??" << endl;
+        else if (command.rfind("set_text", 0) == 0) {
+            SetMarqueeText(command.substr(9)); 
         } 
         else if (command == "exit") {
             running = false;
