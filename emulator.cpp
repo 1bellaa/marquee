@@ -9,20 +9,6 @@ extern void StartMarqueeConsole();
 extern void SetMarqueeText(const string& text);
 extern void SetMarqueeSpeed(int speed);
 
-void Welcome() {
-    cout << " ____  ____  _____  _____  ____  ____  __  __" << endl;
-    cout << "| ...|/ ...|| ... || ... || ...|/ ...||  ||  |" << endl;
-    cout << "| |   | |__ | | | || |.| || |.. | |__ |  \\/  |" << endl;
-    cout << "| |   \\._  || | | ||  __/ | ...| \\._ | \\.  ./" << endl;
-    cout << "| |__. __| || |.| || |    | |... __| |  |  |" << endl;
-    cout << "|____||____||_____||_|    |____||____|  |__|" << endl;
-    //cout << "Welcome to CSOPESY!" << endl;
-    cout << "\nGroup developer:" << endl;
-    cout << "Lim, Nathan\nMagabo, Julianna\nManlapig, Rachel\nSanchez, Jeck" << endl;
-    cout << "\nVersion date: Sept. 16" << endl;
-    cout << "" << endl; 
-}
-
 void HelpCommand() {
     cout << "--------------------------------------------------------------------------------------------------------\n";
     cout << "| Command       | Description                                            | Usage                       |\n";
@@ -36,6 +22,20 @@ void HelpCommand() {
     cout << "--------------------------------------------------------------------------------------------------------\n";
 }
 
+void Welcome() {
+    cout << " ____  ____  _____  _____  ____  ____  __  __" << endl;
+    cout << "|  __|/  __||  _  ||  _  ||  __|/  __||  ||  |" << endl;
+    cout << "| |  |  |__ | | | || |_| || |__ | |__ |  \\/  |" << endl;
+    cout << "| |   \\_   || | | || __ / |  __| \\_  | \\_  _/" << endl;
+    cout << "| |__  __| || |_| || |    | |__ __|  |  |  |" << endl;
+    cout << "|____||____||_____||_|    |____||____|  |__|" << endl;
+    //cout << "Welcome to CSOPESY!" << endl;
+    cout << "\nGroup developer:" << endl;
+    cout << "Lim, Nathan\nMagabo, Julianna\nManlapig, Rachel\nSanchez, Jeck" << endl;
+    cout << "\nVersion date: Sept. 18" << endl;
+    cout << "" << endl; 
+}
+
 int main() {
     Welcome();
     bool running = true;
@@ -43,13 +43,14 @@ int main() {
     while (running) {
         string command;
         cout << "Command> ";
-        getline(cin, command);
+        getline(cin, command); 
         
         if (command == "help") {
             HelpCommand();
         } 
         else if (command == "start_marquee") {
             StartMarqueeConsole();
+            Welcome();
         } 
         else if (command.rfind("set_text", 0) == 0) {
             SetMarqueeText(command.substr(9)); 
@@ -64,7 +65,6 @@ int main() {
             cout << "Unrecognizable command.\n" << endl;
         }
     }
-
     
     return 0;
 }
